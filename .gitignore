@@ -1,37 +1,32 @@
-# Node.js dependencies
+# Node modules
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
-# Electron build output
+# Electron build outputs
 /dist
 /out
 /build
 
-# Electron cache
-.cache/
-.electron/
-electron-builder.yml
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# OS-specific junk
+# OS files
 .DS_Store
 Thumbs.db
 
-# Logs
-logs
-*.log
-*.log.*
-
-# Env files (do not commit secrets)
-.env
-.env.*.local
-
-# IDE/editor files
+# Editor settings
 .vscode/
 .idea/
-*.swp
 
-# Optional: ignore test coverage reports
-coverage/
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Electron cache
+*.asar
+
+# Temporary files
+tmp/
+temp/
