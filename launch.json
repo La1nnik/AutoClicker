@@ -3,7 +3,10 @@
   "compounds": [
     {
       "name": "Main + renderer",
-      "configurations": ["Main", "Renderer"],
+      "configurations": [
+        "Main",
+        "Renderer"
+      ],
       "stopAll": true
     }
   ],
@@ -24,7 +27,10 @@
       "windows": {
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
-      "args": [".", "--remote-debugging-port=9222"],
+      "args": [
+        ".",
+        "--remote-debugging-port=9222"
+      ],
       "outputCapture": "std",
       "console": "integratedTerminal"
     }
