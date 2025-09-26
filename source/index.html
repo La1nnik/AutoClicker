@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--COLORS
+        "WindowBackground" Color="#0a0a0a"/>
+        "Background" Color="#1a1a1a"/>
+        "AccentColor" Color="#a551f5"/>
+        "OutlineColor" Color="#331e48"/>
+        "OptionsBorder" Color="#2c333e"/>
+        "TextColor" Color="#626068"/>
+        "Green" Color="#4acf55"/>
+"Red" Color="#dc2626"/>
+-->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClicker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+<div class="mainLayout">
+    <h1 class="logo">
+      <img class="h1Icon" src="Icons/MainCursorIcon.svg" alt="Icon" />
+      AutoClicker
+    </h1>
+  <div class="clickConfig">   
+
+    <h2>
+      <img class="h2Icons" src="Icons/mouse (1).svg" alt="Icon" />
+      Click Configuration
+    </h2>
+
+    <div class="configGrid">
+      <div class="configItem">
+        <label for="clickInterval">
+          <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
+          Click Interval (ms)
+        </label>
+        <input type="number" id="clickInterval" value="1000" onchange="sendValue()"/>
+      </div>
+
+      <div class="configItem">
+        <label for="clickType">
+          <img class="icons" src="Icons/hand pointing.svg" alt="Icon" />
+          Click Type
+        </label>
+        <select id="clickType">
+          <option value="Single-Click">Single Click</option>
+          <option value="Double-Click">Double Click</option>
+        </select>
+      </div>
+
+      <div class="configItem">
+        <label for="mouseButton">
+          <img class="icons" src="Icons/cursor default.svg" alt="Icon" />
+          Mouse Button
+        </label>
+        <select id="mouseButton">
+          <option value="Left-Button">Left Button</option>
+          <option value="Right-Button">Right Button</option>
+        </select>
+      </div>
+
+      <div class="configItem">
+        <label for="repeatCount">
+          <img class="icons" src="Icons/repeat.svg" alt="Icon" />
+          Repeat Count
+        </label>
+        <input type="number" id="repeatCount" value="0" />
+      </div>
+    </div>
+  </div>
+
+
+
+    <div class="rightColumn">
+
+      <div class="status">
+
+        <h2 class="h2Logo">
+          <img class="h2Icons" src="Icons/information slab.svg" alt="Icon" />
+          Status
+        </h2>
+
+        <div class="status-row"> 
+          <span>State:</span>
+          <span id="state">Idle</span>
+        </div>
+
+        <div class="status-row">
+          <span>Clicks:</span>
+          <span id="clicks">0</span>
+        </div>
+
+        <div class="status-row">
+          <span>Runtime:</span>
+          <span id="runtime">00:00:00</span>
+        </div>
+
+      </div>
+
+      <div class="hotkeys">
+
+        
+        <h2 class="h2Logo">
+          <img class="h2Icons" id="keyboard" src="Icons/keyboard.svg" alt="Icon" />
+          Hotkeys
+        </h2>
+        
+
+
+        <div class="hotkeys-row">
+          <label for="start">Start/Stop</label>
+          <button id="start">F6</button>
+        </div>
+
+      </div>
+
+    </div>
+    
+</div>
+    
+  
+    <script src="script.js"></script>
+  </body>
+</html>
