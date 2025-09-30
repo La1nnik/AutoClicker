@@ -2,27 +2,48 @@
 
 
 const { app, BrowserWindow, ipcMain } = require('electron/main')
-const { mouse, keyboard, Button, Key } = require("@nut-tree-fork/nut-js");
-const { globalShortcut, webContents } = require('electron');
+const { mouse, Button } = require("@nut-tree-fork/nut-js");
+const { globalShortcut } = require('electron');
 
 let win;
 
 let clicking = false;
-let msInterval = 1000;
 let clickInterval;
 let hotkey = "F6";
 let clickCount = 0;
 
+//map for choosing the right function
+const clickTypeMap = {
+  single: async (btn) => {
+    await mouse.click(btn);
+  },
+  double: async (btn) => {
+    await mouse.doubleClick(btn);
+  }
+}
+
+//map for choosing the right button
+const buttonMap = {
+  left: Button.LEFT,
+  right: Button.RIGHT,
+};
 
 
-async function startClicking(interval) {
+
+
+
+async function startClicking(interval, clickType, mouseBtn, repeatCount) {
   if (clicking) return;
   clicking = true;
+
+  const btn = buttonMap[mouseBtn];
+  const clickFnc = clickTypeMap[clickType];
+
 
   clickInterval = setInterval(() => {
 
     (async () => {
-      await mouse.click(Button.LEFT);
+      await clickFnc(btn);
       clickCount++;
       win.webContents.send("clickCount", clickCount);
     })();
@@ -56,23 +77,39 @@ const createWindow = () => {
 //----------------------------------------------------------------
 app.whenReady().then(() => {
   createWindow();
-  let interval;
+
+  let interval = 1000;
+  let clickType = "single";
+  let mouseBtn = "left";
+  let repeatCount = 0;
+
   ipcMain.on("interval", (event, ms) => {
-    console.log("Yay, the event was fired")
     interval = ms;
   })
+
+  ipcMain.on("clickType", (event, data) => {
+    clickType = data;
+  })
+
+  ipcMain.on("mouseBtn", (event, data) => {
+    mouseBtn = data;
+  })
+
+  ipcMain.on("repeatCount", (event, data) => {
+    repeatCount = data;
+  })
+
 
   // Hotkey
   globalShortcut.register(hotkey, () => {
     if (clicking) {
       win.webContents.send("ended");
-
       stopClicking();
 
     } else {
-
+      console.log(clickType, mouseBtn, repeatCount);
       win.webContents.send("started");
-      startClicking(interval);
+      startClicking(interval, clickType, mouseBtn, repeatCount);
     }
   });
 

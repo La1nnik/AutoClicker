@@ -3,16 +3,32 @@ const { ipcRenderer } = require("electron");
 const stateBtn = document.getElementById("state");
 const clicksHTML = document.getElementById("clicks");
 const clickInterval = document.getElementById("clickInterval");
+const clickType = document.getElementById("clickType");
+const mouseBtn = document.getElementById("mouseBtn");
+const repeatCount = document.getElementById("repeatCount");
 
 
 //sends the input of click interval from the renderer to the main proccess;
-function sendValue() {
+function sendClickInterval() {
     ipcRenderer.send("interval", Number(clickInterval.value));
 }
 
+function sendClickType() {
+    ipcRenderer.send("clickType", clickType.value);
+}
+
+function sendMouseBtn() {
+    ipcRenderer.send("mouseBtn", mouseBtn.value);
+}
+
+function sendRepeatCount() {
+    ipcRenderer.send("repeatCount", repeatCount.value);
+}
 
 
+function sendHotkey() {
 
+}
 
 //Stopwatch==================================================
 
