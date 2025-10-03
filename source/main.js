@@ -9,6 +9,7 @@ let win;
 
 let clicking = false;
 let clickInterval;
+let repeater;
 let hotkey = "F6";
 let clickCount = 0;
 
@@ -28,38 +29,59 @@ const buttonMap = {
   right: Button.RIGHT,
 };
 
-
-
-
-
+//responsible for starting clicking and repeat count feature
 async function startClicking(interval, clickType, mouseBtn, repeatCount) {
   if (clicking) return;
   clicking = true;
 
+
   const btn = buttonMap[mouseBtn];
   const clickFnc = clickTypeMap[clickType];
 
+  //Clicks a set amoount of times and then stops.
+  if (repeatCount > 0) {
+    let repeatedClicks = 0;
 
-  clickInterval = setInterval(() => {
+    repeater = setInterval(async () => {
+      if (repeatedClicks >= repeatCount) {
+        clearInterval(repeater);
+        clicking = false;
+        win.webContents.send("ended");
+        return;
+      }
 
-    (async () => {
       await clickFnc(btn);
       clickCount++;
+      repeatedClicks++;
       win.webContents.send("clickCount", clickCount);
-    })();
-  }, interval);
 
-  console.log("Started clicking");
+    }, interval)
+
+    return;
+  }
+
+  //Clicks infinitly
+  clickInterval = setInterval(async () => {
+
+    await clickFnc(btn);
+    clickCount++;
+    win.webContents.send("clickCount", clickCount);
+
+  }, interval);
 }
+
+
 
 function stopClicking() {
   if (!clicking) return;
   clearInterval(clickInterval);
+  clearInterval(repeater);
   clicking = false;
   clickInterval = null;
-  console.log("Stopped clicking");
+  repeater = null;
 }
 
+//=======================================================================================
 const createWindow = () => {
 
   win = new BrowserWindow({
@@ -74,7 +96,7 @@ const createWindow = () => {
   win.loadFile(path.join(__dirname, "index.html"));
 }
 
-//----------------------------------------------------------------
+
 app.whenReady().then(() => {
   createWindow();
 
@@ -107,7 +129,6 @@ app.whenReady().then(() => {
       stopClicking();
 
     } else {
-      console.log(clickType, mouseBtn, repeatCount);
       win.webContents.send("started");
       startClicking(interval, clickType, mouseBtn, repeatCount);
     }
