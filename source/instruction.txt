@@ -1,0 +1,120 @@
+1. **Detect when the user is setting a new hotkey**
+
+   * For example, when the user clicks a “Change Hotkey” button or a modal input field opens, you enter a *“listening”* state.
+   * You can show a message like “Press a key or mouse button to set your new hotkey.”
+
+2. **Listen for key or mouse events in the window**
+
+   * Use `document.addEventListener("keydown", ...)` for keyboard keys.
+   * Use `document.addEventListener("mousedown", ...)` for mouse buttons.
+   * When one of these fires, you capture the `event.key` (like `"F6"` or `"a"`) or the `event.button` (0 = left, 1 = middle, 2 = right).
+
+3. **Stop listening after one input**
+
+   * Once a key or button is pressed, you remove the event listeners so you don’t accidentally record multiple inputs.
+   * You can then display the captured key/button on the UI.
+
+4. **Send the new hotkey to the main process via IPC**
+
+   * Use `ipcRenderer.send("updateHotkey", hotkeyValue)` to inform the main process.
+   * The main process can then re-register the shortcut with `globalShortcut.register()` (when you actually need it to be global).
+
+5. **Optional: handle validation**
+
+   * You can ignore modifier-only keys (`Shift`, `Ctrl`, etc.) or prevent duplicate hotkeys.
+
+
+
+
+
+
+Here’s exactly how to copy (clone) your GitHub repository onto a new machine — step by step, no assumptions:
+
+---
+
+### **1. Install Git**
+
+If you haven’t already:
+
+* Go to [https://git-scm.com/downloads](https://git-scm.com/downloads)
+* Download and install Git for your OS (Windows, macOS, or Linux)
+* During install on Windows, select “Add Git to PATH” when asked
+
+---
+
+### **2. Get the Repository URL**
+
+* Go to your repository on GitHub
+* Click the **green “Code”** button
+* Under “Clone,” copy the **HTTPS URL** (it looks like this):
+
+  ```
+  https://github.com/your-username/your-repo-name.git
+  ```
+
+---
+
+### **3. Open a Terminal or Command Prompt**
+
+* On **Windows**: open *Git Bash* or *Command Prompt*
+* On **macOS/Linux**: open *Terminal*
+
+---
+
+### **4. Navigate to Where You Want the Project**
+
+For example, if you want it in your Documents folder:
+
+```bash
+cd ~/Documents
+```
+
+(On Windows PowerShell: `cd "C:\Users\YourName\Documents"`)
+
+---
+
+### **5. Clone the Repository**
+
+Run:
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+```
+
+This creates a new folder with your project’s files.
+
+---
+
+### **6. Go Into the Project Folder**
+
+```bash
+cd your-repo-name
+```
+
+---
+
+### **7. Install Dependencies (if it’s a Node/Electron project)**
+
+If your project has a `package.json`, run:
+
+```bash
+npm install
+```
+
+This will download all dependencies.
+
+---
+
+### **8. Verify Everything Works**
+
+Run your Electron app (or whatever your project uses):
+
+```bash
+npm start
+```
+
+---
+
+
+
+

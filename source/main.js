@@ -122,6 +122,12 @@ app.whenReady().then(() => {
   })
 
 
+  ipcMain.on("getHotkey", (event, data) => {
+    hotkey = data;
+  })
+
+
+
   // Hotkey
   globalShortcut.register(hotkey, () => {
     if (clicking) {

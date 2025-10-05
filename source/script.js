@@ -99,13 +99,17 @@ ipcRenderer.on("clickCount", (event, clickCount) => {
 const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModal");
 const closeBtn = document.getElementById("closeModal");
-
 const saveModal = document.getElementById("saveModal");
-const hotkey = document.getElementById("hotkey");
+const rendererHotkey = document.getElementById("hotkey");
 
+let hotkey;
 
 openBtn.addEventListener("click", () => {
     modal.classList.add("open");
+    openBtn.addEventListener("keydown");
+    openBtn.addEventListener("mousedown");
+
+    ipcRenderer.send("getHotkey");
 });
 
 closeBtn.addEventListener("click", () => {
@@ -113,8 +117,8 @@ closeBtn.addEventListener("click", () => {
 });
 
 saveModal.addEventListener("click", () => {
-
-
-
     modal.classList.remove("open");
 });
+
+
+
