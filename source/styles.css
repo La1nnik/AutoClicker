@@ -79,6 +79,21 @@ h2 {
 
 }
 
+.clickConfig select,
+input {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.clickConfig input:hover {
+    background-color: #331e48;
+}
+
+.clickConfig select:hover {
+    background-color: #331e48;
+}
+
+
 .status,
 .hotkeys {
     flex: 1;
@@ -86,16 +101,14 @@ h2 {
     flex-direction: column;
     padding: 35px;
     gap: 17px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
 }
 
 .status-row {
     display: flex;
     justify-content: space-between;
-
-
-
+    align-items: center
 }
 
 
@@ -106,13 +119,21 @@ h2 {
     font-size: 15px;
     padding-right: 15px;
     padding-left: 15px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.hotkeys button:hover {
+    background-color: #331e48;
+    transform: scale(1.05);
 }
 
 .hotkeys-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 }
 
@@ -178,4 +199,96 @@ input {
     color: #fff;
     font-size: 15px;
     font-weight: 600;
+}
+
+.modal {
+    pointer-events: none;
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: -1;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.modal.open {
+    opacity: 1;
+    z-index: 999;
+    pointer-events: all;
+}
+
+.modal-inner {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 250px;
+    padding: 20px 35px;
+
+    background-color: #1a1a1a;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #331e48;
+
+
+}
+
+.modal-inner div {
+    display: flex;
+    gap: 15px;
+
+}
+
+.modal-inner button {
+
+    padding: 7px 18px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+
+
+
+#closeModal {
+    background-color: #0a0a0a;
+    color: white;
+    border: 1px, solid, #2c333e;
+}
+
+#closeModal:hover {
+    background-color: #2c333e;
+    transform: scale(1.05);
+}
+
+#saveModal {
+    background-color: #a551f5;
+    color: white;
+    border: 1px, solid, white;
+}
+
+#saveModal:hover {
+    background-color: #bb75ff;
+    transform: scale(1.05);
+}
+
+#hotkey {
+    font-weight: 600;
+    background-color: #331e48;
+    border: 1px solid #2c333e;
+    color: white;
+    padding: 5px 15px;
+
 }

@@ -107,11 +107,9 @@
           Hotkeys
         </h2>
         
-
-
         <div class="hotkeys-row">
-          <label for="start">Start/Stop</label>
-          <button id="start">F6</button>
+          <label for="start">Start/Stop:</label>
+          <button type="button" id="openModal">F6</button>
         </div>
 
       </div>
@@ -120,7 +118,27 @@
     
 </div>
     
+
+<div class="modal" id="modal">
+
+  <div class="modal-inner">
+    
+    <h2>Enter hotkey</h2>
+    <p id="hotkey">F6</p>
+
+    <div>
+      <button type="button" id="closeModal">Close</button>
+      <button type="button" id="saveModal">Save</button>
+    </div>
+
+
+  </div>
+
+</div>
   
+
+
+
     <script src="script.js"></script>
   </body>
 </html>

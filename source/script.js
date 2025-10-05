@@ -93,3 +93,28 @@ ipcRenderer.on("ended", () => {
 ipcRenderer.on("clickCount", (event, clickCount) => {
     clicksHTML.innerHTML = clickCount;
 });
+
+
+//Modal
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openModal");
+const closeBtn = document.getElementById("closeModal");
+
+const saveModal = document.getElementById("saveModal");
+const hotkey = document.getElementById("hotkey");
+
+
+openBtn.addEventListener("click", () => {
+    modal.classList.add("open");
+});
+
+closeBtn.addEventListener("click", () => {
+    modal.classList.remove("open");
+});
+
+saveModal.addEventListener("click", () => {
+
+
+
+    modal.classList.remove("open");
+});
