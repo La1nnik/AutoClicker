@@ -4,6 +4,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
+//const iohook = require("iohook");
 
 let win;
 
@@ -120,6 +121,14 @@ app.whenReady().then(() => {
   ipcMain.on("repeatCount", (event, data) => {
     repeatCount = data;
   })
+
+
+  ipcMain.on("getHotkey", (event, data) => {
+    console.log(data);
+    hotkey = data;
+    console.log(hotkey);
+  })
+
 
 
   // Hotkey

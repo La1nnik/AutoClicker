@@ -99,22 +99,73 @@ ipcRenderer.on("clickCount", (event, clickCount) => {
 const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModal");
 const closeBtn = document.getElementById("closeModal");
-
 const saveModal = document.getElementById("saveModal");
-const hotkey = document.getElementById("hotkey");
+const rendererHotkeyText = document.getElementById("hotkey");
+
+
+let hotkey;
+
+function handleKeydown(event) {
+    rendererHotkeyText.innerHTML = event.key;
+    hotkey = event.key;
+
+}
+
+function handleMousedown(event) {
+    if (event.target === saveModal || event.target === closeBtn) return;
+
+    switch (event.button) {
+        case 0:
+            rendererHotkeyText.innerHTML = "LMB"
+            break;
+        case 1:
+            rendererHotkeyText.innerHTML = "MMB"
+            break;
+        case 2:
+            rendererHotkeyText.innerHTML = "RMB"
+            break;
+
+        case 3:
+            rendererHotkeyText.innerHTML = "MB4"
+            break;
+        case 4:
+            rendererHotkeyText.innerHTML = "MB5"
+            break;
+    }
+
+    hotkey = event.button;
+}
+
 
 
 openBtn.addEventListener("click", () => {
     modal.classList.add("open");
+
+    document.addEventListener("keydown", handleKeydown);
+    document.addEventListener("mousedown", handleMousedown);
+
+
 });
 
 closeBtn.addEventListener("click", () => {
+    document.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("mousedown", handleMousedown);
+
     modal.classList.remove("open");
+
 });
 
 saveModal.addEventListener("click", () => {
+    document.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("mousedown", handleMousedown);
 
-
+    ipcRenderer.send("getHotkey", hotkey);
+    openBtn.innerHTML = hotkey;
 
     modal.classList.remove("open");
 });
+
+
+
+//Add a comparison check between the event.target and saveModal
+//Make the the save button change the hotkey button outside the modal
