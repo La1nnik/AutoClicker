@@ -103,12 +103,11 @@ const saveModal = document.getElementById("saveModal");
 const rendererHotkeyText = document.getElementById("hotkey");
 
 
-let hotkey;
+let hotkey
 
 function handleKeydown(event) {
-    rendererHotkeyText.innerHTML = event.key;
-    hotkey = event.key;
-
+    hotkey = event.key.toUpperCase();
+    rendererHotkeyText.innerHTML = hotkey;
 }
 
 function handleMousedown(event) {
@@ -116,30 +115,39 @@ function handleMousedown(event) {
 
     switch (event.button) {
         case 0:
-            rendererHotkeyText.innerHTML = "LMB"
+            rendererHotkeyText.innerHTML = "LMB";
+            hotkey = "LMB";
             break;
         case 1:
-            rendererHotkeyText.innerHTML = "MMB"
+            rendererHotkeyText.innerHTML = "MMB";
+            hotkey = "MMB";
             break;
+
         case 2:
-            rendererHotkeyText.innerHTML = "RMB"
+            rendererHotkeyText.innerHTML = "RMB";
+            hotkey = "RMB";
             break;
 
         case 3:
-            rendererHotkeyText.innerHTML = "MB4"
+            rendererHotkeyText.innerHTML = "MB4";
+            hotkey = "MB4";
             break;
         case 4:
-            rendererHotkeyText.innerHTML = "MB5"
+            rendererHotkeyText.innerHTML = "MB5";
+            hotkey = "MB5";
             break;
     }
 
-    hotkey = event.button;
+
 }
 
 
 
 openBtn.addEventListener("click", () => {
     modal.classList.add("open");
+
+    ipcRenderer.send("pause");
+
 
     document.addEventListener("keydown", handleKeydown);
     document.addEventListener("mousedown", handleMousedown);
@@ -150,7 +158,7 @@ openBtn.addEventListener("click", () => {
 closeBtn.addEventListener("click", () => {
     document.removeEventListener("keydown", handleKeydown);
     document.removeEventListener("mousedown", handleMousedown);
-
+    ipcRenderer.send("action", false);
     modal.classList.remove("open");
 
 });
@@ -159,6 +167,7 @@ saveModal.addEventListener("click", () => {
     document.removeEventListener("keydown", handleKeydown);
     document.removeEventListener("mousedown", handleMousedown);
 
+    ipcRenderer.send("action", true);
     ipcRenderer.send("getHotkey", hotkey);
     openBtn.innerHTML = hotkey;
 

@@ -4,6 +4,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
+const { globalAgent } = require('http');
 //const iohook = require("iohook");
 
 let win;
@@ -13,6 +14,11 @@ let clickInterval;
 let repeater;
 let hotkey = "F6";
 let clickCount = 0;
+
+let interval = 1000;
+let clickType = "single";
+let mouseBtn = "left";
+let repeatCount = 0;
 
 //map for choosing the right function
 const clickTypeMap = {
@@ -31,7 +37,7 @@ const buttonMap = {
 };
 
 //responsible for starting clicking and repeat count feature
-async function startClicking(interval, clickType, mouseBtn, repeatCount) {
+async function startClicking() {
   if (clicking) return;
   clicking = true;
 
@@ -82,6 +88,36 @@ function stopClicking() {
   repeater = null;
 }
 
+
+function registerKeyboardHotkey() {
+  // Hotkey
+  globalShortcut.register(hotkey, () => {
+    if (clicking) {
+      win.webContents.send("ended");
+      stopClicking();
+
+    } else {
+      win.webContents.send("started");
+      startClicking();
+    }
+  });
+}
+
+function waitForRendererHotkey() {
+  return new Promise((resolve) => {
+    ipcMain.once("getHotkey", (event, data) => {
+      resolve(data);
+    });
+  });
+}
+
+function waitForRendererModalAction() {
+  return new Promise((resolve) => {
+    ipcMain.once("action", (event, data) => {
+      resolve(data);
+    });
+  });
+}
 //=======================================================================================
 const createWindow = () => {
 
@@ -101,10 +137,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
-  let interval = 1000;
-  let clickType = "single";
-  let mouseBtn = "left";
-  let repeatCount = 0;
+
 
   ipcMain.on("interval", (event, ms) => {
     interval = ms;
@@ -122,26 +155,33 @@ app.whenReady().then(() => {
     repeatCount = data;
   })
 
+  //      ipcMain.once("getHotkey", (event, data) => {
+  //        hotkey = data;
+  //      })
 
-  ipcMain.on("getHotkey", (event, data) => {
-    console.log(data);
-    hotkey = data;
-    console.log(hotkey);
+
+  //pause globalShortcut while the modal for the hotkey is open to prevent unwanted start of the autoclicker.
+  ipcMain.on("pause", async (event) => {
+    globalShortcut.unregisterAll();
+
+    save = await waitForRendererModalAction();
+
+    if (save) {
+      hotkey = await waitForRendererHotkey();
+      registerKeyboardHotkey();
+    }
+    else {
+      registerKeyboardHotkey();
+    }
   })
 
 
 
-  // Hotkey
-  globalShortcut.register(hotkey, () => {
-    if (clicking) {
-      win.webContents.send("ended");
-      stopClicking();
 
-    } else {
-      win.webContents.send("started");
-      startClicking(interval, clickType, mouseBtn, repeatCount);
-    }
-  });
+
+
+  registerKeyboardHotkey();
+
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
