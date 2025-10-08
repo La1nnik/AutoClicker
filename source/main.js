@@ -155,11 +155,6 @@ app.whenReady().then(() => {
     repeatCount = data;
   })
 
-  //      ipcMain.once("getHotkey", (event, data) => {
-  //        hotkey = data;
-  //      })
-
-
   //pause globalShortcut while the modal for the hotkey is open to prevent unwanted start of the autoclicker.
   ipcMain.on("pause", async (event) => {
     globalShortcut.unregisterAll();
