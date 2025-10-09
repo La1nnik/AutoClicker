@@ -11,12 +11,23 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "electron": "^38.2.1",
     "electron-rebuild": "^3.2.9"
   },
   "dependencies": {
-    "@mechakeys/iohook": "^1.1.1",
     "@nut-tree-fork/nut-js": "^4.2.6",
-    "inhook": "^1.0.0"
+    "@tkomde/iohook": "^1.1.6",
+    "electron": "^38.0.0"
+  },
+  "iohook": {
+    "targets": [
+      "node-137",
+      "electron-139"
+    ],
+    "platforms": [
+      "win32"
+    ],
+    "arches": [
+      "x64"
+    ]
   }
 }

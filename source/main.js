@@ -5,7 +5,9 @@ const { app, BrowserWindow, ipcMain } = require('electron/main')
 const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
 const { globalAgent } = require('http');
-//const iohook = require("iohook");
+const iohook = require('@tkomde/iohook');
+
+
 
 let win;
 
@@ -103,6 +105,33 @@ function registerKeyboardHotkey() {
   });
 }
 
+const mouseKeys = {
+  LMB: 1,
+  RMB: 2,
+  MMB: 3,
+  MB4: 4,
+  MB5: 5,
+};
+
+
+function registerMouseHotkey() {
+
+  iohook.on("mousedown", (event) => {
+    if (event.button === mouseKeys[hotkey]) {
+      win.webContents.send("started");
+      startClicking();
+    }
+  });
+
+  iohook.on("mouseup", (event) => {
+    if (event.button === mouseKeys[hotkey]) {
+      win.webContents.send("ended");
+      stopClicking();
+    }
+  })
+}
+
+
 function waitForRendererHotkey() {
   return new Promise((resolve) => {
     ipcMain.once("getHotkey", (event, data) => {
@@ -160,13 +189,17 @@ app.whenReady().then(() => {
     globalShortcut.unregisterAll();
 
     save = await waitForRendererModalAction();
-
+    //regex to check if the hotkey is a mouse button
+    const pattern = /^(LMB|MMB|RMB|MB4|MB5)$/i;
     if (save) {
       hotkey = await waitForRendererHotkey();
-      registerKeyboardHotkey();
-    }
-    else {
-      registerKeyboardHotkey();
+      if (pattern.test(hotkey)) {
+        registerMouseHotkey();
+        iohook.start();
+      }
+      else {
+        registerKeyboardHotkey();
+      }
     }
   })
 
