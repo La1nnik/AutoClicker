@@ -11,16 +11,20 @@ const iohook = require('@tkomde/iohook');
 
 let win;
 
+let ignoreNextClick = false;
+
+
 let clicking = false;
 let clickInterval;
 let repeater;
-let hotkey = "F6";
 let clickCount = 0;
 
+//default settings
 let interval = 1000;
 let clickType = "single";
 let mouseBtn = "left";
 let repeatCount = 0;
+let hotkey = "F6";
 
 //map for choosing the right function
 const clickTypeMap = {
@@ -46,6 +50,9 @@ async function startClicking() {
 
   const btn = buttonMap[mouseBtn];
   const clickFnc = clickTypeMap[clickType];
+
+
+
 
   //Clicks a set amoount of times and then stops.
   if (repeatCount > 0) {
@@ -106,7 +113,6 @@ function registerKeyboardHotkey() {
 }
 
 const mouseKeys = {
-  LMB: 1,
   RMB: 2,
   MMB: 3,
   MB4: 4,
@@ -116,19 +122,28 @@ const mouseKeys = {
 
 function registerMouseHotkey() {
 
+  iohook.removeAllListeners("mousedown");
+  iohook.removeAllListeners("mouseup");
+
   iohook.on("mousedown", (event) => {
-    if (event.button === mouseKeys[hotkey]) {
+
+    if (app.isReady() && BrowserWindow.getFocusedWindow()) return;
+
+    if (event.button === mouseKeys[hotkey] && !clicking) {
       win.webContents.send("started");
       startClicking();
     }
   });
 
   iohook.on("mouseup", (event) => {
-    if (event.button === mouseKeys[hotkey]) {
+
+    if (event.button === mouseKeys[hotkey] && clicking) {
       win.webContents.send("ended");
       stopClicking();
     }
-  })
+  });
+
+  iohook.start();
 }
 
 
@@ -190,12 +205,11 @@ app.whenReady().then(() => {
 
     save = await waitForRendererModalAction();
     //regex to check if the hotkey is a mouse button
-    const pattern = /^(LMB|MMB|RMB|MB4|MB5)$/i;
+    const pattern = /^(MMB|RMB|MB4|MB5)$/i;
     if (save) {
       hotkey = await waitForRendererHotkey();
       if (pattern.test(hotkey)) {
         registerMouseHotkey();
-        iohook.start();
       }
       else {
         registerKeyboardHotkey();
@@ -220,6 +234,8 @@ app.whenReady().then(() => {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
+  iohook.removeAllListeners();
+  iohook.stop();
 });
 
 

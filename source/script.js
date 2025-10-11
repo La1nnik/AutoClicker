@@ -40,11 +40,11 @@ let hr = 0;
 
 function timer() {
     sec++;
-    if (sec === 60) {
+    if (sec == 60) {
         min++
         sec = 0
     }
-    if (min === 60) {
+    if (min == 60) {
         hr++;
         sec, min = 0;
     }
@@ -114,10 +114,6 @@ function handleMousedown(event) {
     if (event.target === saveModal || event.target === closeBtn) return;
 
     switch (event.button) {
-        case 0:
-            rendererHotkeyText.innerHTML = "LMB";
-            hotkey = "LMB";
-            break;
         case 1:
             rendererHotkeyText.innerHTML = "MMB";
             hotkey = "MMB";
@@ -173,8 +169,3 @@ saveModal.addEventListener("click", () => {
 
     modal.classList.remove("open");
 });
-
-
-
-//Add a comparison check between the event.target and saveModal
-//Make the the save button change the hotkey button outside the modal
