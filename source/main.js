@@ -146,7 +146,6 @@ function registerMouseHotkey() {
   iohook.start();
 }
 
-
 function waitForRendererHotkey() {
   return new Promise((resolve) => {
     ipcMain.once("getHotkey", (event, data) => {
