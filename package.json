@@ -16,7 +16,8 @@
   "dependencies": {
     "@nut-tree-fork/nut-js": "^4.2.6",
     "@tkomde/iohook": "^1.1.6",
-    "electron": "^38.0.0"
+    "electron": "^38.0.0",
+    "jquery": "^3.7.1"
   },
   "iohook": {
     "targets": [

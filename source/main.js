@@ -217,10 +217,6 @@ app.whenReady().then(() => {
   })
 
 
-
-
-
-
   registerKeyboardHotkey();
 
 

@@ -36,7 +36,7 @@
           <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
           Click Interval (ms)
         </label>
-        <input type="number" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
+        <input type="number" min="0" max="10000000" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
       </div>
 
       <div class="configItem">
