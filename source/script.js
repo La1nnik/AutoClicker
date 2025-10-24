@@ -40,11 +40,11 @@ let hr = 0;
 
 function timer() {
     sec++;
-    if (sec === 60) {
+    if (sec == 60) {
         min++
         sec = 0
     }
-    if (min === 60) {
+    if (min == 60) {
         hr++;
         sec, min = 0;
     }
@@ -100,25 +100,72 @@ const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModal");
 const closeBtn = document.getElementById("closeModal");
 const saveModal = document.getElementById("saveModal");
-const rendererHotkey = document.getElementById("hotkey");
+const rendererHotkeyText = document.getElementById("hotkey");
 
-let hotkey;
+
+let hotkey
+
+function handleKeydown(event) {
+    hotkey = event.key.toUpperCase();
+    rendererHotkeyText.innerHTML = hotkey;
+}
+
+function handleMousedown(event) {
+    if (event.target === saveModal || event.target === closeBtn) return;
+
+    switch (event.button) {
+        case 1:
+            rendererHotkeyText.innerHTML = "MMB";
+            hotkey = "MMB";
+            break;
+
+        case 2:
+            rendererHotkeyText.innerHTML = "RMB";
+            hotkey = "RMB";
+            break;
+
+        case 3:
+            rendererHotkeyText.innerHTML = "MB4";
+            hotkey = "MB4";
+            break;
+        case 4:
+            rendererHotkeyText.innerHTML = "MB5";
+            hotkey = "MB5";
+            break;
+    }
+
+
+}
+
+
 
 openBtn.addEventListener("click", () => {
     modal.classList.add("open");
-    openBtn.addEventListener("keydown");
-    openBtn.addEventListener("mousedown");
 
-    ipcRenderer.send("getHotkey");
+    ipcRenderer.send("pause");
+
+
+    document.addEventListener("keydown", handleKeydown);
+    document.addEventListener("mousedown", handleMousedown);
+
+
 });
 
 closeBtn.addEventListener("click", () => {
+    document.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("mousedown", handleMousedown);
+    ipcRenderer.send("action", false);
     modal.classList.remove("open");
+
 });
 
 saveModal.addEventListener("click", () => {
+    document.removeEventListener("keydown", handleKeydown);
+    document.removeEventListener("mousedown", handleMousedown);
+
+    ipcRenderer.send("action", true);
+    ipcRenderer.send("getHotkey", hotkey);
+    openBtn.innerHTML = hotkey;
+
     modal.classList.remove("open");
 });
-
-
-

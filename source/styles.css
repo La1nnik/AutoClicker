@@ -82,7 +82,7 @@ h2 {
 .clickConfig select,
 input {
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
 }
 
 .clickConfig input:hover {
@@ -122,7 +122,7 @@ input {
     padding-top: 5px;
     padding-bottom: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
 }
 
 .hotkeys button:hover {
@@ -256,7 +256,7 @@ input {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
 }
 
 

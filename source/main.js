@@ -4,14 +4,27 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
+const { globalAgent } = require('http');
+const iohook = require('@tkomde/iohook');
+
+
 
 let win;
+
+let ignoreNextClick = false;
+
 
 let clicking = false;
 let clickInterval;
 let repeater;
-let hotkey = "F6";
 let clickCount = 0;
+
+//default settings
+let interval = 1000;
+let clickType = "single";
+let mouseBtn = "left";
+let repeatCount = 0;
+let hotkey = "F6";
 
 //map for choosing the right function
 const clickTypeMap = {
@@ -30,13 +43,16 @@ const buttonMap = {
 };
 
 //responsible for starting clicking and repeat count feature
-async function startClicking(interval, clickType, mouseBtn, repeatCount) {
+async function startClicking() {
   if (clicking) return;
   clicking = true;
 
 
   const btn = buttonMap[mouseBtn];
   const clickFnc = clickTypeMap[clickType];
+
+
+
 
   //Clicks a set amoount of times and then stops.
   if (repeatCount > 0) {
@@ -81,6 +97,70 @@ function stopClicking() {
   repeater = null;
 }
 
+
+function registerKeyboardHotkey() {
+  // Hotkey
+  globalShortcut.register(hotkey, () => {
+    if (clicking) {
+      win.webContents.send("ended");
+      stopClicking();
+
+    } else {
+      win.webContents.send("started");
+      startClicking();
+    }
+  });
+}
+
+const mouseKeys = {
+  RMB: 2,
+  MMB: 3,
+  MB4: 4,
+  MB5: 5,
+};
+
+
+function registerMouseHotkey() {
+
+  iohook.removeAllListeners("mousedown");
+  iohook.removeAllListeners("mouseup");
+
+  iohook.on("mousedown", (event) => {
+
+    if (app.isReady() && BrowserWindow.getFocusedWindow()) return;
+
+    if (event.button === mouseKeys[hotkey] && !clicking) {
+      win.webContents.send("started");
+      startClicking();
+    }
+  });
+
+  iohook.on("mouseup", (event) => {
+
+    if (event.button === mouseKeys[hotkey] && clicking) {
+      win.webContents.send("ended");
+      stopClicking();
+    }
+  });
+
+  iohook.start();
+}
+
+function waitForRendererHotkey() {
+  return new Promise((resolve) => {
+    ipcMain.once("getHotkey", (event, data) => {
+      resolve(data);
+    });
+  });
+}
+
+function waitForRendererModalAction() {
+  return new Promise((resolve) => {
+    ipcMain.once("action", (event, data) => {
+      resolve(data);
+    });
+  });
+}
 //=======================================================================================
 const createWindow = () => {
 
@@ -100,10 +180,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
-  let interval = 1000;
-  let clickType = "single";
-  let mouseBtn = "left";
-  let repeatCount = 0;
+
 
   ipcMain.on("interval", (event, ms) => {
     interval = ms;
@@ -121,24 +198,27 @@ app.whenReady().then(() => {
     repeatCount = data;
   })
 
+  //pause globalShortcut while the modal for the hotkey is open to prevent unwanted start of the autoclicker.
+  ipcMain.on("pause", async (event) => {
+    globalShortcut.unregisterAll();
 
-  ipcMain.on("getHotkey", (event, data) => {
-    hotkey = data;
+    save = await waitForRendererModalAction();
+    //regex to check if the hotkey is a mouse button
+    const pattern = /^(MMB|RMB|MB4|MB5)$/i;
+    if (save) {
+      hotkey = await waitForRendererHotkey();
+      if (pattern.test(hotkey)) {
+        registerMouseHotkey();
+      }
+      else {
+        registerKeyboardHotkey();
+      }
+    }
   })
 
 
+  registerKeyboardHotkey();
 
-  // Hotkey
-  globalShortcut.register(hotkey, () => {
-    if (clicking) {
-      win.webContents.send("ended");
-      stopClicking();
-
-    } else {
-      win.webContents.send("started");
-      startClicking(interval, clickType, mouseBtn, repeatCount);
-    }
-  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -149,6 +229,8 @@ app.whenReady().then(() => {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
+  iohook.removeAllListeners();
+  iohook.stop();
 });
 
 
