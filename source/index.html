@@ -32,11 +32,14 @@
 
     <div class="configGrid">
       <div class="configItem">
-        <label for="clickInterval">
-          <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
-          Click Interval (ms)
+        <label for="mouseBtn">
+          <img class="icons" src="Icons/cursor default.svg" alt="Icon" />
+          Mouse Button
         </label>
-        <input type="text" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
+        <select id="mouseBtn" onchange="sendMouseBtn()">
+          <option value="left">Left Button</option>
+          <option value="right">Right Button</option>
+        </select>
       </div>
 
       <div class="configItem">
@@ -55,14 +58,11 @@
       </div>
 
       <div class="configItem">
-        <label for="mouseBtn">
-          <img class="icons" src="Icons/cursor default.svg" alt="Icon" />
-          Mouse Button
+        <label for="clickInterval">
+          <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
+          Click Interval (ms)
         </label>
-        <select id="mouseBtn" onchange="sendMouseBtn()">
-          <option value="left">Left Button</option>
-          <option value="right">Right Button</option>
-        </select>
+        <input type="text" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
       </div>
 
       <div class="configItem">
