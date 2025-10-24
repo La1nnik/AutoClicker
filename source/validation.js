@@ -29,4 +29,4 @@ function validateNumInput(id) {
 
 validateNumInput("clickInterval");
 
-validateNumInput("repeatCount")
+validateNumInput("repeatCount");
