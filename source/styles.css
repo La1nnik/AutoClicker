@@ -311,11 +311,6 @@ select:open::picker-icon {
 }
 
 
-@starting-style {
-    ::picker(select):popover-open {
-        opacity: 0;
-    }
-}
 
 ::picker(select) {
     border: none;
