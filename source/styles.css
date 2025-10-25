@@ -292,3 +292,74 @@ input {
     padding: 5px 15px;
 
 }
+
+
+select,
+::picker(select) {
+    appearance: base-select;
+}
+
+
+
+select::picker-icon {
+    color: #bb75ff;
+    transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+    rotate: 180deg;
+}
+
+
+
+::picker(select) {
+    border: none;
+    opacity: 0;
+    transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+    opacity: 1;
+}
+
+::picker(select) {
+    top: calc(anchor(bottom) + 10px);
+
+}
+
+option {
+    gap: 20px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #2c333e;
+    background: #0a0a0a;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.1s;
+}
+
+option:first-of-type {
+    border-radius: 10px 10px 0 0;
+}
+
+option:last-of-type {
+    border-radius: 0 0 10px 10px;
+}
+
+::picker(select) {
+    border-radius: 10px;
+}
+
+option:not(option:last-of-type) {
+    border-bottom: none;
+}
+
+option:hover {
+    background: #331e48;
+}
+
+option::checkmark {
+    display: none;
+}

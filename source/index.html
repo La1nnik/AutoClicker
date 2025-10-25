@@ -26,30 +26,11 @@
   <div class="clickConfig">   
 
     <h2>
-      <img class="h2Icons" src="Icons/mouse (1).svg" alt="Icon" />
+      <img class="h2Icons" src="Icons/mouse.svg" alt="Icon" />
       Click Configuration
     </h2>
 
     <div class="configGrid">
-      <div class="configItem">
-        <label for="clickInterval">
-          <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
-          Click Interval (ms)
-        </label>
-        <input type="text" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
-      </div>
-
-      <div class="configItem">
-        <label for="clickType">
-          <img class="icons" src="Icons/hand pointing.svg" alt="Icon" />
-          Click Type
-        </label>
-        <select id="clickType" onchange="sendClickType()">
-          <option value="single">Single Click</option>
-          <option value="double">Double Click</option>
-        </select>
-      </div>
-
       <div class="configItem">
         <label for="mouseBtn">
           <img class="icons" src="Icons/cursor default.svg" alt="Icon" />
@@ -59,6 +40,29 @@
           <option value="left">Left Button</option>
           <option value="right">Right Button</option>
         </select>
+      </div>
+
+      <div class="configItem">
+        <label for="clickType">
+          <img class="icons" src="Icons/hand pointing.svg" alt="Icon" />
+          Click Type
+        </label>
+        <select id="clickType" onchange="sendClickType()">
+          <button>
+            <selectedcontent></selectedcontent>
+          </button>
+
+          <option value="single">Single Click</option>
+          <option value="double">Double Click</option>
+        </select> 
+      </div>
+
+      <div class="configItem">
+        <label for="clickInterval">
+          <img class="icons" src="Icons/clock fill.svg" alt="Icon" />
+          Click Interval (ms)
+        </label>
+        <input type="text" id="clickInterval" value="1000" onchange="sendClickInterval()"/>
       </div>
 
       <div class="configItem">
