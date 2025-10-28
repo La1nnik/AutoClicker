@@ -103,7 +103,8 @@ const saveModal = document.getElementById("saveModal");
 const rendererHotkeyText = document.getElementById("hotkey");
 
 
-let hotkey
+let hotkey;
+
 
 function handleKeydown(event) {
     hotkey = event.key.toUpperCase();
@@ -156,6 +157,8 @@ closeBtn.addEventListener("click", () => {
     document.removeEventListener("mousedown", handleMousedown);
     ipcRenderer.send("action", false);
     modal.classList.remove("open");
+    rendererHotkeyText.innerHTML = openBtn.innerHTML;
+
 
 });
 
