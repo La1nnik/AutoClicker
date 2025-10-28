@@ -213,6 +213,14 @@ app.whenReady().then(() => {
       else {
         registerKeyboardHotkey();
       }
+    } else {
+      // Re-register the existing hotkey when closing without saving
+      if (pattern.test(hotkey)) {
+        registerMouseHotkey();
+      }
+      else {
+        registerKeyboardHotkey();
+      }
     }
   })
 
