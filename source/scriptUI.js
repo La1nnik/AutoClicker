@@ -18,7 +18,10 @@ for (let i = 0; i < clickConfigElements.length; i++) {
         }
 
 
-        if (!isAlreadyClicked) {
+        if (element.tagName === "SELECT" && !isAlreadyClicked) {
+            element.classList.add("clicked");
+        }
+        else if (element.tagName === "INPUT") {
             element.classList.add("clicked");
         }
 
