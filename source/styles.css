@@ -85,10 +85,11 @@ h2 {
 }
 
 .clickConfig select,
-input {
+.clickConfig input {
     cursor: pointer;
     transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
 }
+
 
 .clickConfig input:hover {
     background-color: #331e48;
@@ -194,7 +195,7 @@ input {
 
 
 .configItem select,
-input {
+.configItem input {
     width: 100%;
     padding: 12px 14px;
     background-color: #0a0a0a;
@@ -321,7 +322,7 @@ select:open::picker-icon {
 ::picker(select) {
     border: none;
     opacity: 0;
-    transition: all 0.4s allow-discrete;
+    transition: all 0.3s allow-discrete;
 }
 
 ::picker(select):popover-open {
