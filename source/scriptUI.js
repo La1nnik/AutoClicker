@@ -29,7 +29,7 @@ for (let i = 0; i < clickConfigElements.length; i++) {
         //Removes the glowing effect if clicked somewhere else
         document.addEventListener("click", () => {
             element.classList.remove("clicked");
-            document.removeEventListener("click");
+            document.removeEventListener("click", event);
         })
     });
 }
