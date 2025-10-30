@@ -172,3 +172,20 @@ saveModal.addEventListener("click", () => {
 
     modal.classList.remove("open");
 });
+
+
+
+
+//HOLD TO CLICK
+let checkbox = document.getElementById("checkbox")
+checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+        ipcRenderer.send("hold");
+    }
+    else {
+        ipcRenderer.send("unhold");
+    }
+
+})
+
+

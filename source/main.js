@@ -6,6 +6,7 @@ const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
 const { globalAgent } = require('http');
 const iohook = require('@tkomde/iohook');
+const { event } = require('jquery');
 
 
 
@@ -18,6 +19,7 @@ let clicking = false;
 let clickInterval;
 let repeater;
 let clickCount = 0;
+let hold = false;
 
 //default settings
 let interval = 1000;
@@ -125,27 +127,53 @@ function registerMouseHotkey() {
   iohook.removeAllListeners("mousedown");
   iohook.removeAllListeners("mouseup");
 
-  iohook.on("mousedown", (event) => {
+  //Hold to autoclikc with mouse button
+  if (hold == true) {
+    iohook.on("mousedown", (event) => {
 
-    // Only ignore if the app window is focused (to prevent triggering while using the app)
-    if (BrowserWindow.getFocusedWindow()) return;
+      // Only ignore if the app window is focused (to prevent triggering while using the app)
+      if (BrowserWindow.getFocusedWindow()) return;
 
-    if (event.button === mouseKeys[hotkey] && !clicking) {
-      win.webContents.send("started");
-      startClicking();
-    }
-  });
+      if (event.button === mouseKeys[hotkey] && !clicking) {
+        win.webContents.send("started");
+        startClicking();
+      }
+    });
 
-  iohook.on("mouseup", (event) => {
+    iohook.on("mouseup", (event) => {
 
-    if (event.button === mouseKeys[hotkey] && clicking) {
-      win.webContents.send("ended");
-      stopClicking();
-    }
-  });
+      if (event.button === mouseKeys[hotkey] && clicking) {
+        win.webContents.send("ended");
+        stopClicking();
+      }
+    });
+  }
+
+  //Click to autoclick with mouse button
+  else if (hold == false) {
+    iohook.on("mousedown", (event) => {
+
+      // Only ignore if the app window is focused (to prevent triggering while using the app)
+      if (BrowserWindow.getFocusedWindow()) return;
+
+      if (event.button === mouseKeys[hotkey] && !clicking) {
+        win.webContents.send("started");
+        startClicking();
+      }
+      else if (event.button === mouseKeys[hotkey] && clicking) {
+        win.webContents.send("ended");
+        stopClicking();
+      }
+    });
+  }
+
 
   iohook.start();
 }
+
+
+
+
 
 function waitForRendererHotkey() {
   return new Promise((resolve) => {
@@ -223,6 +251,14 @@ app.whenReady().then(() => {
         registerKeyboardHotkey();
       }
     }
+  })
+
+  ipcMain.on("hold", (event) => {
+    hold = true;
+  })
+
+  ipcMain.on("unhold", (event) => {
+    hold = false
   })
 
 
