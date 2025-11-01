@@ -1,7 +1,7 @@
 {
   "name": "autoclicker",
   "version": "1.0.0",
-  "description": "A customizable auto-clicker application with hotkey support",
+  "description": "A customizable auto-clicker application",
   "license": "ISC",
   "author": "La1nnik",
   "type": "commonjs",
