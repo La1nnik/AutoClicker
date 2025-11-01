@@ -192,7 +192,7 @@ function registerMouseHotkey() {
       // Only ignore if the app window is focused (to prevent triggering while using the app)
       if (BrowserWindow.getFocusedWindow()) return;
 
-      if (event.button === mouseBtn[hotkey] && !clicking) {
+      if (event.button === mouseKeys[hotkey] && !clicking) {
         win.webContents.send("started");
         startClicking();
       }
@@ -200,7 +200,7 @@ function registerMouseHotkey() {
 
     iohook.on("mouseup", (event) => {
 
-      if (event.button === mouseBtn[hotkey] && clicking) {
+      if (event.button === mouseKeys[hotkey] && clicking) {
         win.webContents.send("ended");
         stopClicking();
       }
