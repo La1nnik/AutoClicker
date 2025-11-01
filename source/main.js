@@ -1,7 +1,4 @@
-
-
-
-const { app, BrowserWindow, ipcMain } = require('electron/main')
+const { app, BrowserWindow, ipcMain, Menu } = require('electron/main')
 const { mouse, Button } = require("@nut-tree-fork/nut-js");
 const { globalShortcut } = require('electron');
 const { globalAgent } = require('http');
@@ -249,18 +246,27 @@ function waitForRendererModalAction() {
     });
   });
 }
+
 //=======================================================================================
 const createWindow = () => {
 
+  const path = require('path');
+
   win = new BrowserWindow({
     width: 700,
-    height: 800,
-    minHeight: 700,
-    minWidth: 480,
+    height: 720,
+    minHeight: 720,
+    minWidth: 700,
+    maxHeight: 720,
+    maxWidth: 700,
+    resizable: false,
+    icon: path.join(__dirname, 'Icons', 'logo.ico'),
     webPreferences: { nodeIntegration: true, contextIsolation: false }
   })
 
-  const path = require('path');
+  // Remove the menu bar completely
+  Menu.setApplicationMenu(null);
+
   win.loadFile(path.join(__dirname, "index.html"));
 }
 
