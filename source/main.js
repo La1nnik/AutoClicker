@@ -12,8 +12,6 @@ const { event } = require('jquery');
 
 let win;
 
-let ignoreNextClick = false;
-
 
 let clicking = false;
 let clickInterval;
@@ -101,18 +99,39 @@ function stopClicking() {
 
 
 function registerKeyboardHotkey() {
-  // Hotkey
-  globalShortcut.register(hotkey, () => {
-    if (clicking) {
-      win.webContents.send("ended");
-      stopClicking();
 
-    } else {
-      win.webContents.send("started");
-      startClicking();
-    }
-  });
+  //Hold to autoclikc with keyboard button
+  if (hold == true) {
+    iohook.on("keydown", (event) => {
+
+      // Only ignore if the app window is focused (to prevent triggering while using the app)
+      if (BrowserWindow.getFocusedWindow()) return;
+
+      if (event.button === mouseKeys[hotkey] && !clicking) {
+        win.webContents.send("started");
+        startClicking();
+      }
+    });
+  }
+
+  else if (hold == false) {
+    globalShortcut.register(hotkey, () => {
+      if (clicking) {
+        win.webContents.send("ended");
+        stopClicking();
+
+      } else {
+        win.webContents.send("started");
+        startClicking();
+      }
+    });
+  }
 }
+
+
+
+
+
 
 const mouseKeys = {
   RMB: 2,
@@ -255,10 +274,26 @@ app.whenReady().then(() => {
 
   ipcMain.on("hold", (event) => {
     hold = true;
+    // Re-register mouse hotkey to apply new hold setting
+    const pattern = /^(MMB|RMB|MB4|MB5)$/i;
+    if (pattern.test(hotkey)) {
+      registerMouseHotkey();
+    }
+    else {
+      registerKeyboardHotkey();
+    }
   })
 
   ipcMain.on("unhold", (event) => {
-    hold = false
+    hold = false;
+    // Re-register mouse hotkey to apply new hold setting
+    const pattern = /^(MMB|RMB|MB4|MB5)$/i;
+    if (pattern.test(hotkey)) {
+      registerMouseHotkey();
+    }
+    else {
+      registerKeyboardHotkey();
+    }
   })
 
 
