@@ -19,12 +19,33 @@ let repeater;
 let clickCount = 0;
 let hold = false;
 
+
 //default settings
 let interval = 1000;
 let clickType = "single";
 let mouseBtn = "left";
 let repeatCount = 0;
 let hotkey = "F6";
+let keyCode = "F6";// Will store event.code string from renderer
+
+// iohook keycode to event.code mapping
+const iohookToEventCode = {
+  59: "F1", 60: "F2", 61: "F3", 62: "F4", 63: "F5", 64: "F6",
+  65: "F7", 66: "F8", 67: "F9", 68: "F10", 87: "F11", 88: "F12",
+  1: "Escape", 41: "Backquote", 2: "Digit1", 3: "Digit2", 4: "Digit3",
+  5: "Digit4", 6: "Digit5", 7: "Digit6", 8: "Digit7", 9: "Digit8",
+  10: "Digit9", 11: "Digit0", 12: "Minus", 13: "Equal", 14: "Backspace",
+  15: "Tab", 16: "KeyQ", 17: "KeyW", 18: "KeyE", 19: "KeyR", 20: "KeyT",
+  21: "KeyY", 22: "KeyU", 23: "KeyI", 24: "KeyO", 25: "KeyP",
+  26: "BracketLeft", 27: "BracketRight", 28: "Enter", 58: "CapsLock",
+  30: "KeyA", 31: "KeyS", 32: "KeyD", 33: "KeyF", 34: "KeyG",
+  35: "KeyH", 36: "KeyJ", 37: "KeyK", 38: "KeyL", 39: "Semicolon",
+  40: "Quote", 43: "Backslash", 42: "ShiftLeft", 44: "KeyZ",
+  45: "KeyX", 46: "KeyC", 47: "KeyV", 48: "KeyB", 49: "KeyN",
+  50: "KeyM", 51: "Comma", 52: "Period", 53: "Slash", 54: "ShiftRight",
+  29: "ControlLeft", 3675: "ControlRight", 56: "AltLeft", 3640: "AltRight",
+  57: "Space"
+};
 
 //map for choosing the right function
 const clickTypeMap = {
@@ -100,18 +121,34 @@ function stopClicking() {
 
 function registerKeyboardHotkey() {
 
-  //Hold to autoclikc with keyboard button
-  if (hold == true) {
-    iohook.on("keydown", (event) => {
+  iohook.removeAllListeners("keydown");
+  iohook.removeAllListeners("keyup");
 
+  //Hold to autoclick with keyboard button
+  if (hold == true) {
+    globalShortcut.unregisterAll();
+
+    iohook.on("keydown", (event) => {
       // Only ignore if the app window is focused (to prevent triggering while using the app)
       if (BrowserWindow.getFocusedWindow()) return;
 
-      if (event.button === mouseKeys[hotkey] && !clicking) {
+      const eventCode = iohookToEventCode[event.keycode];
+      if (eventCode === keyCode && !clicking) {
         win.webContents.send("started");
         startClicking();
       }
     });
+
+    iohook.on("keyup", (event) => {
+
+      const eventCode = iohookToEventCode[event.keycode];
+      if (eventCode === keyCode && clicking) {
+        win.webContents.send("ended");
+        stopClicking();
+      }
+    });
+
+
   }
 
   else if (hold == false) {
@@ -126,6 +163,8 @@ function registerKeyboardHotkey() {
       }
     });
   }
+
+  iohook.start();
 }
 
 
@@ -146,14 +185,14 @@ function registerMouseHotkey() {
   iohook.removeAllListeners("mousedown");
   iohook.removeAllListeners("mouseup");
 
-  //Hold to autoclikc with mouse button
+  //Hold to autoclick with mouse button
   if (hold == true) {
     iohook.on("mousedown", (event) => {
 
       // Only ignore if the app window is focused (to prevent triggering while using the app)
       if (BrowserWindow.getFocusedWindow()) return;
 
-      if (event.button === mouseKeys[hotkey] && !clicking) {
+      if (event.button === mouseBtn[hotkey] && !clicking) {
         win.webContents.send("started");
         startClicking();
       }
@@ -161,7 +200,7 @@ function registerMouseHotkey() {
 
     iohook.on("mouseup", (event) => {
 
-      if (event.button === mouseKeys[hotkey] && clicking) {
+      if (event.button === mouseBtn[hotkey] && clicking) {
         win.webContents.send("ended");
         stopClicking();
       }
@@ -196,7 +235,8 @@ function registerMouseHotkey() {
 
 function waitForRendererHotkey() {
   return new Promise((resolve) => {
-    ipcMain.once("getHotkey", (event, data) => {
+    ipcMain.once("getHotkey", (event, data, dataKeyCode) => {
+      keyCode = dataKeyCode;
       resolve(data);
     });
   });
